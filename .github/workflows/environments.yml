@@ -1,0 +1,26 @@
+name: Environments
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        type: environment
+        default: test
+        required: false
+        description: Environment name
+jobs:
+  print:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            version: 20
+          - os: macos-latest
+            version: 18
+    runs-on: ${{ matrix.os }}
+    environment: ${{ input.environment-name }}
+    env:
+      USERNAME: ${{ vars.USERNAME }}
+      PASSWORD: ${{ secret.PASSWORD }}
+    steps:
+      - run: echo "${USERNAME}"
+      - run: echo "${PASSWORD:0:1} ${PASSWORD#?}"
